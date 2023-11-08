@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import json
 import os
-import models
+from models.base_model import BaseModel
 from datetime import datetime
 
 class FileStorage:
@@ -12,24 +12,19 @@ class FileStorage:
         return FileStorage.__objects
 
     def new(self, obj):
-        obj_dict = {}
-
-        for key, value in obj.__dict__.items():
-            if isinstance(value, datetime):
-                obj_dict[key] = value.isoformat()
-            else:
-                obj_dict[key] = value
-        obj_dict['__class__'] = obj.__class__.__name__
-
         key_str = obj.__class__.__name__ + "." + obj.id
-        FileStorage.__objects[key_str] = obj_dict
+        FileStorage.__objects[key_str] = obj
 
     def save(self):
         """
         Serialize python dictionary - stored in the class attribute `__objects`
         """
-        with open(FileStorage.__file_path, "w", encoding="utf-8") as f:
-            json.dump(FileStorage.__objects, f)
+        obj_dict ={}
+
+        for key, value in FileStorage.__objects.items():
+            obj_dict[key] = value.to_dict()
+            with open(FileStorage.__file_path, "w", encoding="utf-8") as f:
+                json.dump(obj_dict, f)
 
     def reload(self):
         """
@@ -39,3 +34,7 @@ class FileStorage:
         if file_exists:
             with open(FileStorage.__file_path, "r", encoding="utf-8") as f:
                 FileStorage.__objects = json.load(f)
+                for val in FileStorage.__objects.values():
+                    class_name = val["__class__"]
+                    if isinstance(class_name, str) and type(eval(class_name)) == type:
+                        self.new(eval(class_name)(**val))

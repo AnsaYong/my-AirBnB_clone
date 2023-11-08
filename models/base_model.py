@@ -20,7 +20,6 @@ class BaseModel:
             self.updated_at = datetime.today()
 
             # In addition to the above attributes, load the previous attributes
-            #stored_objects = models.storage.all()
             models.storage.new(self)
 
     def __str__(self):
