@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 import json
 import os
+import models
+from datetime import datetime
 
 class FileStorage:
     __file_path = "file.json"
@@ -10,8 +12,17 @@ class FileStorage:
         return FileStorage.__objects
 
     def new(self, obj):
-        key_str = obj.__class__.__name__ + "." + "12121212"
-        FileStorage.__objects[key_str] = obj
+        obj_dict = {}
+
+        for key, value in obj.__dict__.items():
+            if isinstance(value, datetime):
+                obj_dict[key] = value.isoformat()
+            else:
+                obj_dict[key] = value
+        obj_dict['__class__'] = obj.__class__.__name__
+
+        key_str = obj.__class__.__name__ + "." + obj.id
+        FileStorage.__objects[key_str] = obj_dict
 
     def save(self):
         """

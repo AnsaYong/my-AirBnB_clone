@@ -20,15 +20,15 @@ class BaseModel:
             self.updated_at = datetime.today()
 
             # In addition to the above attributes, load the previous attributes
-            stored_objects = models.storage.all()
-            models.storage.new(stored_objects)
+            #stored_objects = models.storage.all()
+            models.storage.new(self)
 
     def __str__(self):
         return "[{}] ({}) {}".format(self.__class__.__name__, self.id, self.__dict__)
 
     def save(self):
-        models.storage.save()
         self.updated_at = datetime.today()
+        models.storage.save()
 
     def to_dict(self):
         updated_dict = {}
