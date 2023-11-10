@@ -43,7 +43,7 @@ class FileStorage:
         private class attribute `__objects` to the file
         specified in `__file_path`
         """
-        obj_dict ={}
+        obj_dict = {}
 
         for key, value in FileStorage.__objects.items():
             obj_dict[key] = value.to_dict()
@@ -65,5 +65,5 @@ class FileStorage:
                     if (
                         isinstance(class_name, str) and
                         type(eval(class_name)) == type
-                        ):
+                    ):
                         self.new(eval(class_name)(**val))

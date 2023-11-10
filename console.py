@@ -55,7 +55,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
 
     def do_show(self, arg):
-        """Prints the string representation of an instance 
+        """Prints the string representation of an instance
         based on the class name and id.
         """
         if not arg:
@@ -72,7 +72,7 @@ class HBNBCommand(cmd.Cmd):
             if (
                 class_name in globals()
                 and isinstance(globals()[class_name], type)
-                ):
+            ):
                 all_objs = storage.all()
                 instance_found = False
                 for obj_id, obj in all_objs.items():
@@ -115,7 +115,6 @@ class HBNBCommand(cmd.Cmd):
         else:
             print("** no instance found **")
 
-
     def do_all(self, arg):
         """Prints all string representation of all
         instances based or not on the class name.
@@ -151,6 +150,6 @@ class HBNBCommand(cmd.Cmd):
             print()
         return line
 
+
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
-    
