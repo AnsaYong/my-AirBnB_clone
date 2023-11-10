@@ -25,6 +25,7 @@ class HBNBCommand(cmd.Cmd):
         """Creates a new instance of BaseModel, Ex: $ create BaseModel"""
         if not arg:
             print("** class name missing **")
+            return
         else:
             if arg in globals() and isinstance(globals()[arg], type):
                 my_model = BaseModel()
@@ -34,9 +35,13 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
 
     def do_show(self, arg):
-        """Prints the string representation of an instance based on the class name and id."""
+        """
+        Prints the string representation of an instance 
+        based on the class name and id.
+        """
         if not arg:
             print("** class name missing **")
+            return
         else:
             args = arg.split()
             if len(args) < 2:
@@ -61,7 +66,8 @@ class HBNBCommand(cmd.Cmd):
                     print("** class doesn't exist **")
 
     def do_destroy(self, line):
-        """Deletes an instance based on the class name and id
+        """
+        Deletes an instance based on the class name and id
         (and saves the changes). Ex: $ destroy BaseModel 1234-1234-1234
         """
         args = line.split()
@@ -90,11 +96,22 @@ class HBNBCommand(cmd.Cmd):
 
     
     def do_all(self, arg):
-        """Commend"""
-        pass
+        """
+        Prints all string representation of all
+        instances based or not on the class name.
+        """
+        list = []
+        if not arg or arg in globals() and isinstance(globals()[arg], type):
+            all_objs = storage.all()
+            for obj_id, obj in all_objs.items():
+                list.append(str(obj))
+            print(list)
+        else:
+            print("** class doesn't exist **")
+            return
     
     def do_update(self, arg):
-        """Commend"""
+        """Comment"""
         pass
     
     def emptyline(self):
