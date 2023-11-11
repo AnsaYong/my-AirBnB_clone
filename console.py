@@ -4,6 +4,7 @@ This module provides a python command line interpreter
 """
 import cmd
 import sys
+import shlex
 from models.base_model import BaseModel
 from models import storage
 
@@ -111,9 +112,44 @@ class HBNBCommand(cmd.Cmd):
             return
     
     def do_update(self, arg):
-        """Comment"""
-        pass
-    
+        """
+        Updates an instance based on the class name
+        and id by adding or updating attribute
+        """
+        args = shlex.split(arg)
+        if not args:
+            print("** class name missing **")
+        else:
+            class_name = args[0]
+            if class_name in globals() and isinstance(globals()[class_name], type):
+                if len(args) < 2:
+                    print("** instance id missing **")
+                else:
+                    instance_id = args[1]
+                    all_objs = storage.all()
+                    instance_found = False
+                    for obj_id, obj in all_objs.items():
+                        if obj.id == instance_id:
+                            if len(args) < 3:
+                                print("** attribute name missing **")
+                            else:
+                                if len(args) < 4:
+                                    print("** value missing **")
+                                else:
+                                    attr_name = args[2]
+                                    attr_value = args[3]
+                                    if attr_name not in ('id', 'created_at', 'updated_at'):
+                                        if isinstance(attr_value, (str, int, float)):
+                                            setattr(obj, attr_name, attr_value)
+                                            obj.save()
+                                            print(obj)
+                            instance_found = True
+                            break
+                    if not instance_found:
+                        print("** no instance found **")
+            else:
+                print("** class doesn't exist **")
+        
     def emptyline(self):
         """
         Prevents the previous command from being executed again if
